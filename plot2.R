@@ -1,0 +1,37 @@
+# Coursera John Hopkins Data Science - Exploratory Data Analysis
+# Course Project Week 1
+# Plot 2
+
+# Load the data
+fileUrl <- "https://d396qusza40orc.cloudfront.net/exdata_data_household_power_consumption.zip"
+download.file(fileUrl, destfile = "exdata_data_household_power_consumption.zip")
+
+# Unzip the original data
+unzip("exdata_data_household_power_consumption.zip")
+alldata <- read.table("household_power_consumption.txt", header = TRUE, sep=";",dec = ".")
+
+# Select the data needed (i.e. 1/2/2007 and 2/2/2007)
+selecteddata <-subset(alldata, Date=="1/2/2007"| Date =="2/2/2007")
+
+# Convert the class of the data to be plotted from "factor" to "numeric"
+selecteddata$Global_active_power <- as.numeric(as.character(selecteddata$Global_active_power))
+selecteddata$Sub_metering_1 <- as.numeric(as.character(selecteddata$Sub_metering_1))
+selecteddata$Sub_metering_2 <- as.numeric(as.character(selecteddata$Sub_metering_2))
+selecteddata$Sub_metering_3 <- as.numeric(as.character(selecteddata$Sub_metering_3))
+selecteddata$Voltage <- as.numeric(as.character(selecteddata$Voltage))
+
+### PLot 2
+# Convert the class of the Date from "factor" to "date"
+selecteddata$Date <- as.Date(selecteddata$Date, "%d/%m/%Y")
+
+# Combine Date and Time into DT column and put it into date format
+datetime <- paste(as.Date(selecteddata$Date), selecteddata$Time)
+selecteddata$Datetime <- as.POSIXct(datetime)
+
+# Plot graph
+plot(Global_active_power~Datetime, data = selecteddata, type="l", ylab="Global Active Power (kilowatts)", xlab="")
+
+# Save histogram to png-file
+dev.copy(device = png, filename = 'Plot2.png', width = 480, height = 480)
+dev.off()
+
